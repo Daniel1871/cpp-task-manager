@@ -1,0 +1,15 @@
+cmake_minimum_required (VERSION 3.14)
+project (cpp-task-manager)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK4 REQUIRED gtk4)
+message(STATUS "----- GTK4_INCLUDE_DIRS: ${GTK4_INCLUDE_DIRS}")
+message(STATUS "----- GKT4_LIBRARIES: ${GTK4_LIBRARIES}")
+message(STATUS "----- GTK4_LINK_LIBRARIES: ${GTK4_LINK_LIBRARIES}")
+include_directories(${GTK4_INCLUDE_DIRS})
+link_directories(${GTK4_LIBRARY_DIRS})
+list(APPEND FC_DEP_LIBS ${GTK4_LIBRARIES})
+
+add_executable(main src/main.cpp)
+message(STATUS "----- ${GTK4_CFLAGS_OTHER}")
+target_link_libraries(main ${FC_DEP_LIBS})
