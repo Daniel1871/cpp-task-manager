@@ -1,0 +1,28 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+// #include "json.h"
+using std::cout, std::cin, std::endl;
+
+int main() {
+    std::ifstream stream("file.json", std::ios::binary);
+    if(!stream) {
+    	std::cerr << "Impossible to open the file" << std::endl;
+    	return 1;
+    }
+    
+    
+    std::string file;
+    std::string line;
+    
+    while (std::getline(stream, string)) {
+    	file += string;
+    }
+    
+    cout << line;
+    
+    stream.close();
+    return 0;
+}
+
