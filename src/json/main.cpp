@@ -1,9 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <unordered_map>
+// #include <unordered_map>
 // #include "json.h"
-using std::cout, std::cin, std::endl;
 
 void retrieve_pair(const std::string& string, std::string::iterator& it);
 void read_object(const std::string& string, std::string::iterator& it);
@@ -19,7 +18,7 @@ int main() {
     std::string line, string;
     while(std::getline(stream, line))
     	string += line;
-    cout << string;
+    std::cout << string;
     
     
     std::string::iterator it = string.begin();
@@ -29,7 +28,7 @@ int main() {
     	
     	if(*it == '{')
     		read_object(string, ++it);
-    	// Иначе сразу объект - ПОТОМ
+    	// Иначе это сразу объект - ПОТОМ
     	return 2;
    
     }
@@ -45,7 +44,7 @@ void read_object(const std::string& string, std::string::iterator& it) {
 		++it;
 			
 	while(*it != '}') {
-		retrieve_pair(string, it); // Не пробел и не '}' -> " -> будем извлекать пару ключ-значение
+		retrieve_pair(string, it); // Не пробел и не } -> " -> будем извлекать пару ключ-значение
 	}
 	
 }
@@ -55,8 +54,11 @@ void retrieve_pair(const std::string& string, std::string::iterator& it) {
 	std::string key, value;
 	
 	++it;
-	while(*it != '"') 
+	while(*it != '"'){
+		if(*it == '\\')
+    		key += *it++; // При экранировании оставляем \ и экранированный символ	
 		key += *it++;
+	}
 	++it;
 	
 	while(*it == ':' || *it == ' ')
@@ -64,18 +66,22 @@ void retrieve_pair(const std::string& string, std::string::iterator& it) {
 	
 	if(*it == '"'){
 		++it;
-		while(*it != '"') 
+		while(*it != '"'){
+			if(*it == '\\')
+    			value += *it++;
 			value += *it++;
+		}
 		++it;
 	} else {
+		// СЮДА РЕКУРСИЮ
 		while(*it != ' ' && *it != ',' && *it != '}') 
 			value += *it++;
 	}
 	
-	// Проходим через запятую, если есть
+	// Проходим через запятую при ее наличии
 	while(*it == ' ' || *it == ',')
 		++it;
 	
-	cout << "\n\nKey |" << key << "|\nValue |" << value << "|\nNow it |" << *it << "|";
+	std::cout << "\n\nKey |" << key << "|\nValue |" << value << "|";
 }
 
