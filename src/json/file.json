@@ -1,6 +1,6 @@
 {
    "name": "Valera",
-   "role": "admin",
+   "role": -5.2,
    "age": 18,
    "gender": "male",
    "isRoot": true

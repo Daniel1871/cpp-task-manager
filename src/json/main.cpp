@@ -4,8 +4,9 @@
 // #include <unordered_map>
 // #include "json.h"
 
-void retrieve_pair(const std::string& string, std::string::iterator& it);
-void read_object(const std::string& string, std::string::iterator& it);
+void retrieve_pair(const std::string&, std::string::iterator&);
+void read_object(const std::string&, std::string::iterator&);
+void to_number(const std::string&);
 
 int main() {
     std::ifstream stream("file.json");
@@ -73,9 +74,14 @@ void retrieve_pair(const std::string& string, std::string::iterator& it) {
 		}
 		++it;
 	} else {
-		// СЮДА РЕКУРСИЮ
 		while(*it != ' ' && *it != ',' && *it != '}') 
 			value += *it++;
+		
+		if(value[0] == '-' || std::isdigit(value[0])){ 
+			std::cout  << "\n!!!";
+			to_number(value);
+			
+		}
 	}
 	
 	// Проходим через запятую при ее наличии
@@ -83,5 +89,11 @@ void retrieve_pair(const std::string& string, std::string::iterator& it) {
 		++it;
 	
 	std::cout << "\n\nKey |" << key << "|\nValue |" << value << "|";
+}
+
+void to_number(const std::string& string){
+	// Работаем
+	//int a = std::stoi(value);
+			//std::cout  << a <<"\n";
 }
 
