@@ -5,46 +5,8 @@
 // #include "json.h"
 using std::cout, std::cin, std::endl;
 
-void retrieve_pair(const std::string& string, std::string::iterator& it) {
-	std::string key, value;
-	while(*it != '"')
-		key += *it++;
-	
-	++it;
-	
-	while(*it != ':') 
-		++it;
-	++it;
-	
-	while(*it == ' ')
-		++it;
-	
-	while(*it != ',' && *it != '}') // продолдить отсюда!!!!!!!!!!!!!!!!!!!!!!!!!
-		value += *it++;
-	++it;
-	
-	
-	cout << endl << endl << key << "---" << value;
-}
-
-
-void read_object(const std::string& string, std::string::iterator& it) {
-	bool key = true;
-	bool value = false;
-	bool start = false; // Флаг начала записывания ключа/значения в переменную
-	
-	bool slash = false; // Для экранирования ПОТОМ
-	
-	std::string skey, svalue;
-	
-	
-	while(*it != '}') {
-		if(*it == '"') retrieve_pair(string, ++it);
-		else ++it;	
-	}
-	
-}
-
+void retrieve_pair(const std::string& string, std::string::iterator& it);
+void read_object(const std::string& string, std::string::iterator& it);
 
 int main() {
     std::ifstream stream("file.json");
@@ -62,8 +24,12 @@ int main() {
     
     std::string::iterator it = string.begin();
     while(it != string.end()) {
+    	while(*it == ' ')
+			++it;
+    	
     	if(*it == '{')
     		read_object(string, ++it);
+    	// Иначе сразу объект - ПОТОМ
     	return 2;
    
     }
@@ -71,5 +37,45 @@ int main() {
     
     stream.close();
     return 0;
+}
+
+
+void read_object(const std::string& string, std::string::iterator& it) {	
+	while(*it == ' ')
+		++it;
+			
+	while(*it != '}') {
+		retrieve_pair(string, it); // Не пробел и не '}' -> " -> будем извлекать пару ключ-значение
+	}
+	
+}
+
+
+void retrieve_pair(const std::string& string, std::string::iterator& it) {
+	std::string key, value;
+	
+	++it;
+	while(*it != '"') 
+		key += *it++;
+	++it;
+	
+	while(*it == ':' || *it == ' ')
+		++it;
+	
+	if(*it == '"'){
+		++it;
+		while(*it != '"') 
+			value += *it++;
+		++it;
+	} else {
+		while(*it != ' ' && *it != ',' && *it != '}') 
+			value += *it++;
+	}
+	
+	// Проходим через запятую, если есть
+	while(*it == ' ' || *it == ',')
+		++it;
+	
+	cout << "\n\nKey |" << key << "|\nValue |" << value << "|\nNow it |" << *it << "|";
 }
 
